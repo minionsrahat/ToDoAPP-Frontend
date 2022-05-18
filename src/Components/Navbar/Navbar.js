@@ -17,11 +17,11 @@ const Navbar = () => {
         <>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
-                    {/* <button className="navbar-brand" href="#">Budget App</button> */}
+                    <h1 className="navbar-brand ms-5" href="#">TO-DO App</h1>
                     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div className="navbar-nav mx-auto py-3">
-                            <NavLink to="/home" className="nav-link">Home </NavLink>
-                            {user?  <p onClick={logout} className="nav-link">Logout</p>: <NavLink to="/login" className="nav-link">Log In </NavLink>}
+                            <NavLink to="/" className="nav-link">Home </NavLink>
+                            {user?  <button onClick={logout} className="btn btn-primary mx-4">Logout</button>: <NavLink to="/login" className="nav-link">Log In </NavLink>}
                         </div>
                     </div>
                 </div>

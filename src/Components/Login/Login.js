@@ -17,7 +17,7 @@ const Login = () => {
     useEffect(() => {
         if (user) {
 
-            fetch('http://localhost:5000/login',{
+            fetch('https://fierce-dawn-93622.herokuapp.com/login',{
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ const Login = () => {
                 const {token}=data
                 if(token){
                     localStorage.setItem('accessToken',token)
-                    navigate(from, { replace: true })
+                    navigate('/')
 
                 }
             })
@@ -47,11 +47,10 @@ const Login = () => {
 
                 <div className="row mt-5">
                     <div className="col-8 mx-auto d-flex justify-content-center flex-column align-items-center">
-                        <h4 className='text-center'>Log In</h4>
+                        <h4 className='text-center my-5'>Please Log In to access all functionality of my TO-DO app. Without login you cannot access the features</h4>
                         <GoogleButton
                             onClick={responseGoogle}
                         />
-
                     </div>
 
                 </div>

@@ -20,7 +20,7 @@ const Home = () => {
   const [id, setId] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/readExpense',{
+    fetch('https://fierce-dawn-93622.herokuapp.com/readExpense',{
       headers: { 'Content-Type': 'application/json' ,
       accesstoken:`${email} ${token}`}
     })
@@ -37,7 +37,7 @@ const Home = () => {
 
 
   const deleteItem = async (id) => {
-    fetch(`http://localhost:5000/deleteExpense/${id}`, {
+    fetch(`https://fierce-dawn-93622.herokuapp.com/deleteExpense/${id}`, {
       method: "DELETE",
       headers:{
         accesstoken:`${email} ${token}`
@@ -81,7 +81,7 @@ const Home = () => {
       return element._id === id;
     })
     if (finditem) {
-      fetch(`http://localhost:5000/completeTask/${id}`, {
+      fetch(`https://fierce-dawn-93622.herokuapp.com/completeTask/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' ,
         accesstoken:`${email} ${token}`},
@@ -111,7 +111,7 @@ const Home = () => {
     //  const exist=
     if (edit) {
       const task = { name: name, des: des ,status:0}
-      fetch(`http://localhost:5000/updateExpense/${id}`, {
+      fetch(`https://fierce-dawn-93622.herokuapp.com/updateExpense/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' ,
         accesstoken:`${email} ${token}`},
@@ -142,7 +142,7 @@ const Home = () => {
     }
     else {
       const task = { name: name, des: des ,status:0}
-      fetch("http://localhost:5000/addExpense", {
+      fetch("https://fierce-dawn-93622.herokuapp.com/addExpense", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' ,
         accesstoken:`${email} ${token}`},
