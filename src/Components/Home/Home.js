@@ -1,11 +1,12 @@
 import { async } from '@firebase/util';
 import React from 'react';
-
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Tasks from '../Tasks/Tasks';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
     
@@ -19,7 +20,10 @@ const Home = () => {
   const [id, setId] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/readExpense')
+    fetch('http://localhost:5000/readExpense',{
+      headers: { 'Content-Type': 'application/json' ,
+      accesstoken:`${email} ${token}`}
+    })
       .then(res => res.json())
       .then(data => setTask(data))
   }, [])
@@ -47,10 +51,12 @@ const Home = () => {
             return element._id !== id;
 
           })
+          toast("Task SuccessFully Deleted");
           setTask(newExpenselist)
+
         }
         else{
-            alert("Error")
+          toast("Sorry Unauthorized Access or invalid id");
         }
       })
 
@@ -89,10 +95,11 @@ const Home = () => {
               }
               return element;
             })
+            toast("Wow your task is now completed");
             setTask(newTasklist)
           }
           else{
-            alert("Error")
+            toast("Sorry Unauthorized Access or invalid id");
         }
         })
     }
@@ -119,6 +126,7 @@ const Home = () => {
               }
               return element;
             })
+            toast("Task Successfully Updated");
             setTask(newTasklist)
             setEdit(false)
             setDescription('')
@@ -126,7 +134,7 @@ const Home = () => {
             setId('')
           }
           else{
-            alert("Error")
+            toast("Sorry Unauthorized Access or invalid id");
         }
         })
 
@@ -143,12 +151,13 @@ const Home = () => {
         .then(({ acknowledged, insertedId }) => {
           if (acknowledged) {
             const newTask = { _id: insertedId, name: name, des: des, status:0 };
+            toast("Task Successfully added");
             setTask([...tasks, newTask])
             setName('');
             setDescription('');
           }
           else{
-            alert("Error")
+            toast("Sorry Unauthorized Access or invalid id");
         }
         })
     }
@@ -159,6 +168,7 @@ const Home = () => {
             <div className="">
                 <div className="container mt-5">
                     <div className="row my-5 g-3">
+                      <ToastContainer></ToastContainer>
                         <div className="col-8 mx-auto">
                             <AddTaskForm name={name} des={des} edit={edit} handledesInput={handledesInput} handleFormsubmit={handleFormsubmit} handlenameInput={handlenameInput} ></AddTaskForm>
                         </div>
