@@ -1,15 +1,15 @@
 import React from 'react';
 import Task from '../Task/Task';
 
-const Tasks = ({expenses,deleteItem,editItem}) => {
+const Tasks = ({tasks,deleteItem,editItem,completeItem}) => {
     return (
         <>
             <div className="card">
                 <div className="card-body">
                     <div className="row g-4">                 
                      {
-                       expenses.map((expense)=>{
-                                return <Task key={expense._id} deleteItem={deleteItem} editItem={editItem} expense={expense}></Task>
+                       tasks.map((task)=>{
+                                return <Task key={task._id} deleteItem={deleteItem} completeItem={completeItem} editItem={editItem} task={task}></Task>
                        })
                      }
                     </div>

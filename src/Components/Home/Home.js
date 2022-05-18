@@ -12,7 +12,7 @@ const Home = () => {
   const [user] = useAuthState(auth);
   const email= user?.email
   const token=localStorage.getItem('accessToken')
-  const [task, setTask] = useState([]);
+  const [tasks, setTask] = useState([]);
   const [name, setName] = useState('');
   const [des, setDescription] = useState('');
   const [edit, setEdit] = useState(false);
@@ -43,7 +43,7 @@ const Home = () => {
       .then(res => res.json())
       .then(({ acknowledged, deletedCount }) => {
         if (acknowledged && deletedCount == 1) {
-          const newExpenselist = task.filter((element) => {
+          const newExpenselist = tasks.filter((element) => {
             return element._id !== id;
 
           })
@@ -59,40 +59,67 @@ const Home = () => {
 
 
   const editItem = (id) => {
-
-    const finditem = task.find((element) => {
+    const finditem = tasks.find((element) => {
       return element._id === id;
     })
     if (finditem) {
       setEdit(true)
-      setDescription(finditem.cost)
-      setName(finditem.item)
+      setDescription(finditem.des)
+      setName(finditem.name)
       setId(finditem._id)
     }
-
   }
+
+  const completeItem = (id) => {
+    const finditem = tasks.find((element) => {
+      return element._id === id;
+    })
+    if (finditem) {
+      fetch(`http://localhost:5000/completeTask/${id}`, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' ,
+        accesstoken:`${email} ${token}`},
+        body: JSON.stringify({status:1})
+      }).then(res => res.json())
+        .then(({ acknowledged, modifiedCount }) => {
+          if (acknowledged && modifiedCount == 1) {
+            const newTasklist = tasks.map((element) => {
+              if (element._id === id) {
+                element.status = 1;
+              }
+              return element;
+            })
+            setTask(newTasklist)
+          }
+          else{
+            alert("Error")
+        }
+        })
+    }
+  }
+
 
   const handleFormsubmit = (e) => {
     e.preventDefault();
     //  const exist=
     if (edit) {
-      const expense = { item: name, cost: des }
+      const task = { name: name, des: des ,status:0}
       fetch(`http://localhost:5000/updateExpense/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' ,
         accesstoken:`${email} ${token}`},
-        body: JSON.stringify(expense)
+        body: JSON.stringify(task)
       }).then(res => res.json())
         .then(({ acknowledged, modifiedCount }) => {
           if (acknowledged && modifiedCount == 1) {
-            const newExpenselist = task.map((element) => {
+            const newTasklist = tasks.map((element) => {
               if (element._id === id) {
-                element.cost = des;
-                element.item = name;
+                element.des = des;
+                element.name = name;
               }
               return element;
             })
-            setTask(newExpenselist)
+            setTask(newTasklist)
             setEdit(false)
             setDescription('')
             setName('')
@@ -106,17 +133,17 @@ const Home = () => {
 
     }
     else {
-      const expense = { item: name, cost: des }
+      const task = { name: name, des: des ,status:0}
       fetch("http://localhost:5000/addExpense", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' ,
         accesstoken:`${email} ${token}`},
-        body: JSON.stringify(expense)
+        body: JSON.stringify(task)
       }).then(res => res.json())
         .then(({ acknowledged, insertedId }) => {
           if (acknowledged) {
-            const newExpense = { _id: insertedId, item: name, cost: des };
-            setTask([...task, newExpense])
+            const newTask = { _id: insertedId, name: name, des: des, status:0 };
+            setTask([...tasks, newTask])
             setName('');
             setDescription('');
           }
@@ -125,7 +152,6 @@ const Home = () => {
         }
         })
     }
-
   }
 
     return (
@@ -137,7 +163,7 @@ const Home = () => {
                             <AddTaskForm name={name} des={des} edit={edit} handledesInput={handledesInput} handleFormsubmit={handleFormsubmit} handlenameInput={handlenameInput} ></AddTaskForm>
                         </div>
                         <div className="col-8 mx-auto">
-                            <Tasks expenses={task} deleteItem={deleteItem} editItem={editItem}></Tasks>
+                            <Tasks tasks={tasks} deleteItem={deleteItem} editItem={editItem} completeItem={completeItem}></Tasks>
                         </div>
                        
                     </div>
