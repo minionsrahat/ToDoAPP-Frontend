@@ -7,6 +7,7 @@ import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Tasks from '../Tasks/Tasks';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Spinner from '../Spinner/Spinner';
 
 const Home = () => {
     
@@ -17,15 +18,24 @@ const Home = () => {
   const [name, setName] = useState('');
   const [des, setDescription] = useState('');
   const [edit, setEdit] = useState(false);
+  
   const [id, setId] = useState('');
+  const [spinnerloading, setSpinnerLoading] = useState(false);
+
+
+
 
   useEffect(() => {
+    setSpinnerLoading(true)
     fetch('https://fierce-dawn-93622.herokuapp.com/readExpense',{
       headers: { 'Content-Type': 'application/json' ,
       accesstoken:`${email} ${token}`}
     })
       .then(res => res.json())
       .then(data => setTask(data))
+      .finally(()=>{
+        setSpinnerLoading(false)
+})
   }, [])
 
   const handlenameInput = (e) => {
@@ -162,6 +172,10 @@ const Home = () => {
         })
     }
   }
+
+  if (spinnerloading) {
+    return <Spinner></Spinner>;
+}
 
     return (
         <>

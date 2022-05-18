@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase';
+import Spinner from '../Spinner/Spinner';
 
 const PrivateRoute = ({children}) => {
 
@@ -9,7 +10,7 @@ const PrivateRoute = ({children}) => {
     let location = useLocation();
     if(loading)
     {
-        return <><div>Loading</div></>
+        return <Spinner></Spinner>
     }
   
     if (!user) {

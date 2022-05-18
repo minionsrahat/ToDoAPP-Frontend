@@ -4,6 +4,7 @@ import GoogleButton from 'react-google-button';
 import { GoogleLogin } from 'react-google-login';
 import { useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../firebase';
+import Spinner from '../Spinner/Spinner';
 
 
 const Login = () => {
@@ -35,6 +36,11 @@ const Login = () => {
             })
         }
     }, [user])
+
+    if(loading)
+    {
+        return <Spinner></Spinner>
+    }
 
 
     const responseGoogle = (response) => {
