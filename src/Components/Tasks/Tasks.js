@@ -1,7 +1,7 @@
 import React from 'react';
-import Expense from '../Expense/Expense';
+import Task from '../Task/Task';
 
-const Expenses = ({expenses,deleteItem,editItem}) => {
+const Tasks = ({expenses,deleteItem,editItem}) => {
     return (
         <>
             <div className="card">
@@ -9,7 +9,7 @@ const Expenses = ({expenses,deleteItem,editItem}) => {
                     <div className="row g-4">                 
                      {
                        expenses.map((expense)=>{
-                                return <Expense key={expense._id} deleteItem={deleteItem} editItem={editItem} expense={expense}></Expense>
+                                return <Task key={expense._id} deleteItem={deleteItem} editItem={editItem} expense={expense}></Task>
                        })
                      }
                     </div>
@@ -20,4 +20,4 @@ const Expenses = ({expenses,deleteItem,editItem}) => {
     );
 };
 
-export default Expenses;
+export default Tasks;

@@ -1,9 +1,5 @@
 
 import './App.css';
-import ExpenseForm from './Components/ExpenseForm/ExpenseForm';
-import Expenses from './Components/Expenses/Expenses';
-import uuid from 'react-uuid'
-import { useEffect, useState } from 'react';
 import Navbar from './Components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home/Home';

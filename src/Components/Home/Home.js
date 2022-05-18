@@ -4,34 +4,31 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase';
-import ExpenseForm from '../ExpenseForm/ExpenseForm';
-import Expenses from '../Expenses/Expenses';
+import AddTaskForm from '../AddTaskForm/AddTaskForm';
+import Tasks from '../Tasks/Tasks';
 
 const Home = () => {
     
   const [user] = useAuthState(auth);
   const email= user?.email
   const token=localStorage.getItem('accessToken')
-  const [expenses, setExpense] = useState([]);
-  const [item, setItem] = useState('');
-  const [cost, setCost] = useState('');
+  const [task, setTask] = useState([]);
+  const [name, setName] = useState('');
+  const [des, setDescription] = useState('');
   const [edit, setEdit] = useState(false);
   const [id, setId] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:5000/readExpense')
       .then(res => res.json())
-      .then(data => setExpense(data))
+      .then(data => setTask(data))
   }, [])
 
-  const calculateTotalExpense = () => {
-    return expenses.reduce((acc, item) => acc + parseInt(item.cost), 0);
+  const handlenameInput = (e) => {
+    setName(e.target.value);
   }
-  const handleitemInput = (e) => {
-    setItem(e.target.value);
-  }
-  const handlecostInput = (e) => {
-    setCost(e.target.value);
+  const handledesInput = (e) => {
+    setDescription(e.target.value);
   }
 
 
@@ -46,11 +43,11 @@ const Home = () => {
       .then(res => res.json())
       .then(({ acknowledged, deletedCount }) => {
         if (acknowledged && deletedCount == 1) {
-          const newExpenselist = expenses.filter((element) => {
+          const newExpenselist = task.filter((element) => {
             return element._id !== id;
 
           })
-          setExpense(newExpenselist)
+          setTask(newExpenselist)
         }
         else{
             alert("Error")
@@ -63,13 +60,13 @@ const Home = () => {
 
   const editItem = (id) => {
 
-    const finditem = expenses.find((element) => {
+    const finditem = task.find((element) => {
       return element._id === id;
     })
     if (finditem) {
       setEdit(true)
-      setCost(finditem.cost)
-      setItem(finditem.item)
+      setDescription(finditem.cost)
+      setName(finditem.item)
       setId(finditem._id)
     }
 
@@ -79,7 +76,7 @@ const Home = () => {
     e.preventDefault();
     //  const exist=
     if (edit) {
-      const expense = { item, cost }
+      const expense = { item: name, cost: des }
       fetch(`http://localhost:5000/updateExpense/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' ,
@@ -88,17 +85,17 @@ const Home = () => {
       }).then(res => res.json())
         .then(({ acknowledged, modifiedCount }) => {
           if (acknowledged && modifiedCount == 1) {
-            const newExpenselist = expenses.map((element) => {
+            const newExpenselist = task.map((element) => {
               if (element._id === id) {
-                element.cost = cost;
-                element.item = item;
+                element.cost = des;
+                element.item = name;
               }
               return element;
             })
-            setExpense(newExpenselist)
+            setTask(newExpenselist)
             setEdit(false)
-            setCost('')
-            setItem('')
+            setDescription('')
+            setName('')
             setId('')
           }
           else{
@@ -109,7 +106,7 @@ const Home = () => {
 
     }
     else {
-      const expense = { item, cost }
+      const expense = { item: name, cost: des }
       fetch("http://localhost:5000/addExpense", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' ,
@@ -118,10 +115,10 @@ const Home = () => {
       }).then(res => res.json())
         .then(({ acknowledged, insertedId }) => {
           if (acknowledged) {
-            const newExpense = { _id: insertedId, item, cost };
-            setExpense([...expenses, newExpense])
-            setItem('');
-            setCost('');
+            const newExpense = { _id: insertedId, item: name, cost: des };
+            setTask([...task, newExpense])
+            setName('');
+            setDescription('');
           }
           else{
             alert("Error")
@@ -137,16 +134,12 @@ const Home = () => {
                 <div className="container mt-5">
                     <div className="row my-5 g-3">
                         <div className="col-8 mx-auto">
-                            <ExpenseForm item={item} cost={cost} edit={edit} handlecostInput={handlecostInput} handleFormsubmit={handleFormsubmit} handleitemInput={handleitemInput} ></ExpenseForm>
+                            <AddTaskForm name={name} des={des} edit={edit} handledesInput={handledesInput} handleFormsubmit={handleFormsubmit} handlenameInput={handlenameInput} ></AddTaskForm>
                         </div>
                         <div className="col-8 mx-auto">
-                            <Expenses expenses={expenses} deleteItem={deleteItem} editItem={editItem}></Expenses>
+                            <Tasks expenses={task} deleteItem={deleteItem} editItem={editItem}></Tasks>
                         </div>
-                        <div className="col-8 mx-auto">
-                            <h5 className="text-center">
-                                Total Expense: ${calculateTotalExpense()}
-                            </h5>
-                        </div>
+                       
                     </div>
                 </div>
             </div>

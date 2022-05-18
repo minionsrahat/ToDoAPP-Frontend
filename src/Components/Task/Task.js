@@ -1,7 +1,7 @@
 import React from 'react';
 import {AiFillDelete} from 'react-icons/ai';
 import {AiFillEdit} from 'react-icons/ai';
-const Expense = (props) => {
+const Task = (props) => {
     const {_id,item,cost}=props.expense;
     return (
         <div className="col-10 mx-auto p-2 shadow rounded">
@@ -22,4 +22,4 @@ const Expense = (props) => {
     );
 };
 
-export default Expense;
+export default Task;
